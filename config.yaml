@@ -1,0 +1,4 @@
+app:
+  server:
+    env: "dev"
+    port: 3000
