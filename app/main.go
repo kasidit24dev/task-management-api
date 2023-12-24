@@ -2,6 +2,7 @@ package main
 
 import (
 	"task-management-api/config"
+	_ "task-management-api/docs"
 	log "task-management-api/logger"
 	"task-management-api/server"
 )

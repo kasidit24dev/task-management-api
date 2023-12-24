@@ -1,5 +1,5 @@
 run:
-	go run main.go
+	go run app/main.go
 
 update_package:
 	go mod tidy

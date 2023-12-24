@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	echoSwagger "github.com/swaggo/echo-swagger"
 	"go.uber.org/zap"
 	"task-management-api/config"
 	"task-management-api/task-management/handlers"
@@ -40,10 +41,13 @@ func (server *echoServer) initTasksHandler() {
 	tasksHandler := handlers.NewTaskHandler(uc, server.logger)
 
 	tasksRouter := server.app.Group("/api/v1")
+	tasksRouter.GET("/swagger/*", echoSwagger.WrapHandler)
+
 	tasksRouter.POST("/task", tasksHandler.CreateTask)
 	tasksRouter.GET("/task/:id", tasksHandler.GetTaskByID)
 	tasksRouter.PUT("/task/:id", tasksHandler.UpdateTask)
 	tasksRouter.PATCH("/task/:id/status", tasksHandler.UpdateTaskStatus)
 	tasksRouter.DELETE("/task/:id", tasksHandler.DeleteTaskByID)
 	tasksRouter.GET("/tasks", tasksHandler.ListTasks)
+
 }
