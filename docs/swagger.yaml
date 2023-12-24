@@ -1,0 +1,181 @@
+definitions:
+  handlers.ErrData:
+    properties:
+      error_message:
+        type: string
+    type: object
+  handlers.commonResponse:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        $ref: '#/definitions/handlers.ErrData'
+      message:
+        type: string
+    type: object
+  models.TaskRequest:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  models.TaskResponse:
+    properties:
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: string
+      title:
+        type: string
+    type: object
+  models.UpdateStatusRequest:
+    properties:
+      status:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /task:
+    post:
+      consumes:
+      - application/json
+      description: Create task
+      operationId: post-task
+      parameters:
+      - description: Request Body for create task
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success" example={"code":201,"message":"Success"}
+          schema:
+            $ref: '#/definitions/handlers.commonResponse'
+      summary: CreateTask
+  /task/{id}:
+    delete:
+      description: Delete a task by ID
+      operationId: delete-task-by-id
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success" example={"code":200,"message":"Success"}
+          schema:
+            $ref: '#/definitions/handlers.commonResponse'
+      summary: DeleteTaskByID
+    get:
+      consumes:
+      - application/json
+      description: Get a task by ID
+      operationId: get-task-by-id
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success" example={"code":200,"message":"Success","data":{"id":2,"title":"2","description":"xxx","status":"To
+            Do"}}
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.commonResponse'
+            - properties:
+                data:
+                  $ref: '#/definitions/models.TaskResponse'
+              type: object
+      summary: GetTaskByID
+    put:
+      consumes:
+      - application/json
+      description: Update a task by ID
+      operationId: update-task-by-id
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Request Body for updating task
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.TaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success" example={"code":200,"message":"Success"}
+          schema:
+            $ref: '#/definitions/handlers.commonResponse'
+      summary: UpdateTask
+  /task/{id}/status:
+    patch:
+      consumes:
+      - application/json
+      description: Update the status of a task by ID
+      operationId: update-task-status-by-id
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: New task status [To do, In Progress, Done]
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success" example={"code":200,"message":"Success"}
+          schema:
+            $ref: '#/definitions/handlers.commonResponse'
+      summary: UpdateTaskStatus
+  /tasks:
+    get:
+      description: Retrieve a list of tasks
+      operationId: list-tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success" example={"code":200,"message":"Success","data":[{"id":1,"title":"2","description":"xxx","status":"To
+            Do"},{"id":2,"title":"2","description":"xxx","status":"To Do"}]}
+          schema:
+            allOf:
+            - $ref: '#/definitions/handlers.commonResponse'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.TaskResponse'
+                  type: array
+              type: object
+      summary: ListTasks
+swagger: "2.0"
