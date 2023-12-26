@@ -1,9 +1,12 @@
 package usecase
 
 import (
+	"errors"
+	"fmt"
 	"github.com/mitchellh/mapstructure"
 	"go.uber.org/zap"
 	"sort"
+	"strings"
 	"task-management-api/task-management/entities"
 	"task-management-api/task-management/models"
 	repo "task-management-api/task-management/repositories"
@@ -29,6 +32,14 @@ func (u *task) CreateTask(req *models.TaskRequest) error {
 		Description: req.Description,
 		Status:      entities.StatusTodo,
 	}
+
+	if strings.TrimSpace(req.Title) == "" || strings.TrimSpace(req.Description) == "" {
+		errs := errors.New("request body are require title and description")
+		u.logger.Error("Request body are require title and description.", zap.Error(errs))
+		fmt.Println(2, errs)
+		return errs
+	}
+
 	logger.Info("Create with payload: ", zap.Any("payload", dataTask))
 	err := u.taskRepo.CreateTask(dataTask)
 	if err != nil {
@@ -64,11 +75,21 @@ func (u *task) UpdateTask(id int, req *models.TaskRequest) error {
 
 	logger.Info("Request Task ID", zap.Int("id", id), zap.Any("reqBody", req))
 
-	updateTask := entities.Task{
-		Title:       req.Title,
-		Description: req.Description,
+	task, err := u.taskRepo.GetTaskByID(id)
+	if err != nil {
+		u.logger.Error("Task is not exist", zap.Error(err))
+		return err
 	}
-	if err := u.taskRepo.UpdateTask(id, updateTask); err != nil {
+
+	if strings.TrimSpace(req.Title) != "" {
+		task.Title = req.Title
+	}
+
+	if strings.TrimSpace(req.Description) != "" {
+		task.Description = req.Description
+	}
+
+	if err := u.taskRepo.UpdateTask(id, *task); err != nil {
 		u.logger.Error("Failed to update task", zap.Error(err))
 		return err
 	}

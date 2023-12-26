@@ -69,6 +69,11 @@ BaseUrl: `http://localhost:3000`
 | Delete task        | DELETE | api/v1/task      |    param     |
 | Get task list      |  GET   | api/v1/task-list |     N/A      |
 
-[Go.dev]: https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white
+### Testing
+Run unit tests:
+   ```bash
+   make run_test
+```
 
+[Go.dev]: https://img.shields.io/badge/Go-00ADD8?style=for-the-badge&logo=go&logoColor=white
 [Go-url]: https://go.dev

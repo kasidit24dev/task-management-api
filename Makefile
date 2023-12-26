@@ -3,3 +3,7 @@ run:
 
 update_package:
 	go mod tidy
+
+run_test:
+	go test ./...
+
