@@ -7,6 +7,7 @@
 * [Technologies](#technologies)
 * [API Documentation](#api-documentation)
 * [Available API Endpoints](#available-api-endpoints)
+* [Testing](#testing)
 
 ## Overview
 
